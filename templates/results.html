@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voting Results</title>
+    <link rel="stylesheet" href="{{ url_for('Static', filename='css/results.css') }}">
+</head>
+<body>
+    <div class="results-container">
+        <h1>Voting Results</h1>
+
+        {% if total_votes > 0 %}
+            <p>Total Votes: {{ total_votes }}</p>
+            <ul>
+                {% for choice, count in votes.items() %}
+                    <li>
+                        <span class="choice-name">{{ choice }}:</span>
+                        <span class="vote-count">{{ count }} vote(s)</span>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No votes have been cast yet.</p>
+        {% endif %}
+    </div>
+</body>
+</html>
