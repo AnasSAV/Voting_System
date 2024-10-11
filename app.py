@@ -22,33 +22,28 @@ class Vote(db.Model):
 # Route to handle the root URL
 @app.route('/')
 def index():
-    return render_template('vote.html')
+    return render_template('vote1.html')  # Default to vote1.html or change as needed
 
-# Route to handle vote page 1
-@app.route('/vote_page_1')
-def vote_page_1():
-    return render_template('vote1.html')
-
-# Route to handle vote page 2
-@app.route('/vote_page_2')
-def vote_page_2():
-    return render_template('vote2.html')
-
-# Route to handle vote page 3
-@app.route('/vote_page_3')
-def vote_page_3():
-    return render_template('vote3.html')
-
-# Route to handle vote page 4
-@app.route('/vote_page_4')
-def vote_page_4():
-    return render_template('vote4.html')
+# Route to handle voting pages
+@app.route('/vote/<int:vote_page>')
+def vote_page(vote_page):
+    if vote_page == 1:
+        return render_template('vote1.html')
+    elif vote_page == 2:
+        return render_template('vote2.html')
+    elif vote_page == 3:
+        return render_template('vote3.html')
+    elif vote_page == 4:
+        return render_template('vote4.html')
+    else:
+        return "Page not found", 404
 
 # Route to handle voting
 @app.route('/submit_vote', methods=['POST'])
 def submit_vote():
     data = request.get_json()
     team_name = data.get('team')
+    page_number = data.get('page')  # Get the page number
 
     if not team_name:
         return jsonify({"message": "No team name provided"}), 400
@@ -57,7 +52,9 @@ def submit_vote():
     db.session.add(new_vote)
     db.session.commit()
 
-    return jsonify({"message": f"Vote recorded for {team_name}"}), 200
+    # Redirect back to the same voting page
+    return jsonify({"message": f"Vote recorded for {team_name}", "redirect_url": url_for('vote_page', vote_page=page_number)}), 200
+
 
 # Route to get voting results
 @app.route('/results', methods=['GET'])
