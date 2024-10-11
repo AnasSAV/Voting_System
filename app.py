@@ -24,6 +24,26 @@ class Vote(db.Model):
 def index():
     return render_template('vote.html')
 
+# Route to handle vote page 1
+@app.route('/vote_page_1')
+def vote_page_1():
+    return render_template('vote1.html')
+
+# Route to handle vote page 2
+@app.route('/vote_page_2')
+def vote_page_2():
+    return render_template('vote2.html')
+
+# Route to handle vote page 3
+@app.route('/vote_page_3')
+def vote_page_3():
+    return render_template('vote3.html')
+
+# Route to handle vote page 4
+@app.route('/vote_page_4')
+def vote_page_4():
+    return render_template('vote4.html')
+
 # Route to handle voting
 @app.route('/submit_vote', methods=['POST'])
 def submit_vote():
