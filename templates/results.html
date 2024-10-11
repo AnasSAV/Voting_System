@@ -14,10 +14,36 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            flex-direction: column;
             height: 100vh;
             color: #333;
         }
 
+        /* Header Styles */
+        .header {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .header h1 {
+            margin: 0;
+            padding: 10px;
+            background: linear-gradient(135deg, #000000, #1565c0);
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+
+        /* Start Image Section */
+        .start {
+            margin-top: 10px;
+        }
+
+        .start img {
+            width: 500px; /* Adjust the size of the image */
+            height: auto;
+        }
+
+        /* Leaderboard Container */
         .leaderboard-container {
             background-color: white;
             border-radius: 10px;
@@ -25,6 +51,7 @@
             box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1);
             text-align: center;
             width: 60%;
+            margin-top: 20px; /* Adjusts spacing between the start image and leaderboard */
         }
 
         h1 {
@@ -70,7 +97,7 @@
 
         /* Style for the rest of the rows */
         .light-blue {
-            background-color: #ADD8E6; /* Light blue color */
+            background-color: #d8f5ff; /* Light blue color */
         }
 
         /* If no votes yet */
@@ -83,9 +110,11 @@
     <div class="header">
         <h1>TECHNO 2024</h1>
     </div>
+
     <div class="start">
         <img src="{{ url_for('static', filename='images/start.png') }}" alt="start">
     </div>
+
     <div class="leaderboard-container">
         <h1>Voting Leaderboard</h1>
 
