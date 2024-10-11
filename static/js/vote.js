@@ -2,7 +2,7 @@ function submitVote(teamName, pageNumber) {
     // Get the vote button that was clicked
     const voteButton = document.querySelector(`button[data-team='${teamName}']`);
     
-    // Disable the button and add a loading message
+    // Disable the button to prevent multiple clicks
     voteButton.disabled = true;
     voteButton.textContent = 'Submitting...';
 
@@ -43,10 +43,9 @@ function submitVote(teamName, pageNumber) {
         popupMessage.textContent = "There was an error submitting your vote.";
         setTimeout(() => {
             document.body.removeChild(popupMessage);
+            // Re-enable the button if an error occurred
+            voteButton.disabled = false;
+            voteButton.textContent = `Vote for ${teamName}`;
         }, 2200); // Remove error message after 2.2 seconds
-
-        // Re-enable the button if an error occurred
-        voteButton.disabled = false;
-        voteButton.textContent = `Vote for ${teamName}`;
     });
 }
