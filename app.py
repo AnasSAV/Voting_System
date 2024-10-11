@@ -1,15 +1,20 @@
-from flask import Flask, jsonify, request, render_template
+from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 import os
 
 app = Flask(__name__)
 
 # Configuring the PostgreSQL database
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')  # Heroku sets this automatically
+db_url = os.environ.get('DATABASE_URL')
+if db_url and db_url.startswith('postgres://'):
+    db_url = db_url.replace('postgres://', 'postgresql://', 1)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = db_url  # Heroku sets this automatically
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
+# Define the Vote model
 class Vote(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     team_name = db.Column(db.String(50), nullable=False)
