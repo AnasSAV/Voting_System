@@ -1,4 +1,4 @@
-function submitVote(teamName, pageNumber) {
+function submitVote(teamName) {
     // Show the popup immediately after the user clicks the vote button
     const popupMessage = document.createElement('div');
     popupMessage.textContent = `Thank you for voting for ${teamName}!`;
@@ -15,20 +15,26 @@ function submitVote(teamName, pageNumber) {
     popupMessage.style.fontSize = '1.2rem';
     document.body.appendChild(popupMessage);
 
+    // Disable the button after it's clicked
+    const buttons = document.querySelectorAll('.vote-button'); // Assuming all vote buttons have the class 'vote-button'
+    buttons.forEach(button => {
+        button.disabled = true; // Disable all buttons
+    });
+
     // Send the vote request
     fetch('/submit_vote', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ team: teamName, page: pageNumber }),  // Include page number in the payload
+        body: JSON.stringify({ team: teamName }),
     })
     .then(response => response.json())
     .then(data => {
-        // After 3 seconds, remove the popup and redirect to the same page
+        // After 3 seconds, remove the popup and redirect
         setTimeout(() => {
             document.body.removeChild(popupMessage);
-            window.location.href = `/vote/${pageNumber}`;  // Redirect back to the same voting page
+            window.location.href = '/'; // Redirect back to the voting page
         }, 2200); // 2.2 seconds delay
     })
     .catch((error) => {
@@ -36,6 +42,10 @@ function submitVote(teamName, pageNumber) {
         popupMessage.textContent = "There was an error submitting your vote.";
         setTimeout(() => {
             document.body.removeChild(popupMessage);
+            // Re-enable the buttons in case of an error
+            buttons.forEach(button => {
+                button.disabled = false;
+            });
         }, 2200); // Remove error message after 2.2 seconds
     });
 }

@@ -10,13 +10,7 @@ body {
     height: 100vh;
     color: #333;
 }
-.header h1 {
-    margin: 0;
-    padding: 10px;
-    background: linear-gradient(135deg, #000000, #1565c0);
-    font-size: 2.5rem;
-    font-weight: bold;
-}
+
 
 .results-container {
     background-color: white;
