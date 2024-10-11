@@ -1,11 +1,11 @@
 from flask import Flask, jsonify, request, render_template
-from flask_sqlalchemy import SQLAlchemy # type: ignore
+from flask_sqlalchemy import SQLAlchemy
 import os
 
 app = Flask(__name__)
 
 # Configuring the PostgreSQL database
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')  # Heroku sets this automatically
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', '').replace("postgres://", "postgresql://") + "?sslmode=require"  # Updated for Heroku
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
