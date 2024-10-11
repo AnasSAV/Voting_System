@@ -33,28 +33,29 @@
     <!-- Voting Section -->
     <div class="vote-container">
         <div class="team">
-            <img src="{{ url_for('static', filename='images/image1.jpg') }}" alt="Rycycle">
+            <img src="{{ url_for('static', filename='images/image1.jpg') }}" alt="Team SSJC">
             <button onclick="submitVote('Zephyrus',2)">Zephyrus</button>
         </div>
 
         <div class="team">
-            <img src="{{ url_for('static', filename='images/image1.jpg') }}" alt="Institute of Brainiacs">
+            <img src="{{ url_for('static', filename='images/image1.jpg') }}" alt="Rycycle">
             <button onclick="submitVote('Step Charge',2)">Step Charge</button>
         </div>
 
         <div class="team">
-            <img src="{{ url_for('static', filename='images/image1.jpg') }}" alt="OneZero">
-            <button onclick="submitVote('PhotonPulseDXII',2)">PhotonPulseDXII </button>
-        </div>
-        <div class="team">
             <img src="{{ url_for('static', filename='images/image1.jpg') }}" alt="Institute of Brainiacs">
-            <button onclick="submitVote('HydraZone',2)">HydraZone</button>
+            <button onclick="submitVote('PhotonPulseDXII ',2)">PhotonPulseDXII </button>
         </div>
 
         <div class="team">
             <img src="{{ url_for('static', filename='images/image1.jpg') }}" alt="OneZero">
-            <button onclick="submitVote('PowerBid',2)">PowerBid </button>
+            <button onclick="submitVote('HydraZone',2)">HydraZone</button>
         </div>
+        <div class="team">
+            <img src="{{ url_for('static', filename='images/image1.jpg') }}" alt="TropiSip">
+            <button onclick="submitVote('PowerBid',2)">PowerBid</button>
+        </div>
+
     </div>
 
     <!-- Footer Section with Logos -->
