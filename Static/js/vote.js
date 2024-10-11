@@ -1,5 +1,4 @@
 function submitVote(teamName) {
-    // Show the popup immediately after the user clicks the vote button
     const popupMessage = document.createElement('div');
     popupMessage.textContent = `Thank you for voting for ${teamName}!`;
     popupMessage.style.position = 'fixed';
@@ -15,7 +14,6 @@ function submitVote(teamName) {
     popupMessage.style.fontSize = '1.2rem';
     document.body.appendChild(popupMessage);
 
-    // Send the vote request
     fetch('/submit_vote', {
         method: 'POST',
         headers: {
@@ -25,7 +23,6 @@ function submitVote(teamName) {
     })
     .then(response => response.json())
     .then(data => {
-        // After 3 seconds, remove the popup and redirect
         setTimeout(() => {
             document.body.removeChild(popupMessage);
             window.location.href = '/'; // Redirect back to the voting page

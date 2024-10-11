@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request, render_template
+from flask import Flask, jsonify, request, render_template, url_for
 from flask_sqlalchemy import SQLAlchemy
 import os
 
@@ -22,15 +22,21 @@ class Vote(db.Model):
 # Route to handle the root URL
 @app.route('/')
 def index():
-    return "Welcome to the voting app!"
+    return render_template('vote.html')
 
 # Route to handle voting
 @app.route('/submit_vote', methods=['POST'])
 def submit_vote():
-    team_name = request.json.get('team')
+    data = request.get_json()
+    team_name = data.get('team')
+
+    if not team_name:
+        return jsonify({"message": "No team name provided"}), 400
+
     new_vote = Vote(team_name=team_name)
     db.session.add(new_vote)
     db.session.commit()
+
     return jsonify({"message": f"Vote recorded for {team_name}"}), 200
 
 # Route to get voting results
@@ -38,7 +44,9 @@ def submit_vote():
 def get_results():
     votes = db.session.query(Vote.team_name, db.func.count(Vote.team_name)).group_by(Vote.team_name).all()
     vote_results = {team: count for team, count in votes}
-    return jsonify(vote_results), 200
+    total_votes = sum(vote_results.values())
+    
+    return render_template('results.html', votes=vote_results, total_votes=total_votes)
 
 # Ensure the database tables are created
 with app.app_context():
