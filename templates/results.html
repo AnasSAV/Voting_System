@@ -38,7 +38,6 @@
             border-collapse: collapse;
             margin: 20px 0;
             font-size: 1.2rem;
-            font-weight: bold;
         }
 
         th, td {
@@ -51,14 +50,6 @@
             background-color: #1565c0;
             color: white;
             font-weight: bold;
-        }
-
-        tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-
-        tr:hover {
-            background-color: #f1f1f1;
         }
 
         /* Style for top 3 ranks */
@@ -77,6 +68,11 @@
             font-weight: bold;
         }
 
+        /* Style for the rest of the rows */
+        .light-blue {
+            background-color: #ADD8E6; /* Light blue color */
+        }
+
         /* If no votes yet */
         p.no-votes {
             color: #888;
@@ -84,6 +80,12 @@
     </style>
 </head>
 <body>
+    <div class="header">
+        <h1>TECHNO 2024</h1>
+    </div>
+    <div class="start">
+        <img src="{{ url_for('static', filename='images/start.png') }}" alt="start">
+    </div>
     <div class="leaderboard-container">
         <h1>Voting Leaderboard</h1>
 
@@ -104,6 +106,7 @@
                             {% if loop.index == 1 %} gold 
                             {% elif loop.index == 2 %} silver
                             {% elif loop.index == 3 %} bronze
+                            {% else %} light-blue
                             {% endif %}
                         ">
                             <td>{{ loop.index }}</td> <!-- Rank based on loop index -->
