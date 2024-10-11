@@ -5,23 +5,94 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Voting Results</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/results.css') }}">
+    <style>
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            background: #f0f4f8;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #333;
+        }
+
+        .leaderboard-container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 40px;
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 60%;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #1565c0;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 1.2rem;
+        }
+
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+            text-align: center;
+        }
+
+        th {
+            background-color: #1565c0;
+            color: white;
+            font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        /* If no votes yet */
+        p.no-votes {
+            color: #888;
+        }
+    </style>
 </head>
 <body>
-    <div class="results-container">
-        <h1>Voting Results</h1>
+    <div class="leaderboard-container">
+        <h1>Voting Leaderboard</h1>
 
         {% if total_votes > 0 %}
             <p>Total Votes: {{ total_votes }}</p>
-            <ul>
-                {% for choice, count in votes.items() %}
-                    <li>
-                        <span class="choice-name">{{ choice }}:</span>
-                        <span class="vote-count">{{ count }} vote(s)</span>
-                    </li>
-                {% endfor %}
-            </ul>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Team Name</th>
+                        <th>Votes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for choice, count in votes.items() %}
+                        <tr>
+                            <td>{{ loop.index }}</td> <!-- Rank based on loop index -->
+                            <td>{{ choice }}</td>
+                            <td>{{ count }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         {% else %}
-            <p>No votes have been cast yet.</p>
+            <p class="no-votes">No votes have been cast yet.</p>
         {% endif %}
     </div>
 </body>

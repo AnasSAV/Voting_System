@@ -59,11 +59,12 @@ def submit_vote():
 # Route to get voting results
 @app.route('/results', methods=['GET'])
 def get_results():
-    votes = db.session.query(Vote.team_name, db.func.count(Vote.team_name)).group_by(Vote.team_name).all()
+    votes = db.session.query(Vote.team_name, db.func.count(Vote.team_name).label('count')).group_by(Vote.team_name).order_by(db.func.count(Vote.team_name).desc()).all()
     vote_results = {team: count for team, count in votes}
     total_votes = sum(vote_results.values())
-    
+
     return render_template('results.html', votes=vote_results, total_votes=total_votes)
+
 
 # Ensure the database tables are created
 with app.app_context():
