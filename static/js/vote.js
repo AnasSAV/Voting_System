@@ -1,13 +1,14 @@
-function submitVote(teamName) {
+function submitVote(teamName, pageNumber) {
     // Get the vote button that was clicked
     const voteButton = document.querySelector(`button[data-team='${teamName}']`);
     
-    // Disable the button and add a loading spinner or text
+    // Disable the button and add a loading message
     voteButton.disabled = true;
     voteButton.textContent = 'Submitting...';
 
-    // Create a popup message for user feedback
+    // Show the popup immediately after the user clicks the vote button
     const popupMessage = document.createElement('div');
+    popupMessage.textContent = `Thank you for voting for ${teamName}!`;
     popupMessage.style.position = 'fixed';
     popupMessage.style.top = '50%';
     popupMessage.style.left = '50%';
@@ -27,31 +28,25 @@ function submitVote(teamName) {
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ team: teamName }),
+        body: JSON.stringify({ team: teamName, page: pageNumber }),  // Include page number in the payload
     })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Vote submission failed');
-        }
-        return response.json();
-    })
+    .then(response => response.json())
     .then(data => {
-        // Show success message and reload page after 2 seconds
-        popupMessage.textContent = `Thank you for voting for ${teamName}!`;
+        // After 2.2 seconds, remove the popup and redirect to the same page
         setTimeout(() => {
             document.body.removeChild(popupMessage);
-            window.location.reload(); // Reload the page after a successful vote
-        }, 2000); // 2 seconds delay
+            window.location.href = `/vote/${pageNumber}`;  // Redirect back to the same voting page
+        }, 2200); // 2.2 seconds delay
     })
     .catch((error) => {
         console.error('Error:', error);
-        // Show error message
         popupMessage.textContent = "There was an error submitting your vote.";
-        // Re-enable the button and reset its text
-        voteButton.disabled = false;
-        voteButton.textContent = `Vote for ${teamName}`;
         setTimeout(() => {
             document.body.removeChild(popupMessage);
-        }, 2000); // Remove error message after 2 seconds
+        }, 2200); // Remove error message after 2.2 seconds
+
+        // Re-enable the button if an error occurred
+        voteButton.disabled = false;
+        voteButton.textContent = `Vote for ${teamName}`;
     });
 }

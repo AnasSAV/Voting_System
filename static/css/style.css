@@ -47,7 +47,7 @@
 
 .team img {
     width: 100%;
-    height: auto;
+    height: 180px; /* Adjust the height of the image */
     object-fit: cover;
     margin-bottom: 10px;
     border-radius: 5px;
