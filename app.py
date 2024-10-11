@@ -5,7 +5,7 @@ import os
 app = Flask(__name__)
 
 # Configuring the PostgreSQL database
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', '').replace("postgres://", "postgresql://") + "?sslmode=require"  # Updated for Heroku
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')  # Heroku sets this automatically
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -13,11 +13,6 @@ db = SQLAlchemy(app)
 class Vote(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     team_name = db.Column(db.String(50), nullable=False)
-
-# Create the database (only needed once)
-@app.before_first_request
-def create_tables():
-    db.create_all()
 
 # Route to handle voting
 @app.route('/submit_vote', methods=['POST'])
@@ -36,4 +31,6 @@ def get_results():
     return jsonify(vote_results), 200
 
 if __name__ == '__main__':
+    with app.app_context():
+        db.create_all()  # Ensure the database tables are created
     app.run(debug=True)
