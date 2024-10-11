@@ -1,11 +1,4 @@
 function submitVote(teamName, pageNumber) {
-    // Get the vote button that was clicked
-    const voteButton = document.querySelector(`button[data-team='${teamName}']`);
-    
-    // Disable the button to prevent multiple clicks
-    voteButton.disabled = true;
-    voteButton.textContent = 'Submitting...';
-
     // Show the popup immediately after the user clicks the vote button
     const popupMessage = document.createElement('div');
     popupMessage.textContent = `Thank you for voting for ${teamName}!`;
@@ -32,7 +25,7 @@ function submitVote(teamName, pageNumber) {
     })
     .then(response => response.json())
     .then(data => {
-        // After 2.2 seconds, remove the popup and redirect to the same page
+        // After 3 seconds, remove the popup and redirect to the same page
         setTimeout(() => {
             document.body.removeChild(popupMessage);
             window.location.href = `/vote/${pageNumber}`;  // Redirect back to the same voting page
@@ -43,9 +36,6 @@ function submitVote(teamName, pageNumber) {
         popupMessage.textContent = "There was an error submitting your vote.";
         setTimeout(() => {
             document.body.removeChild(popupMessage);
-            // Re-enable the button if an error occurred
-            voteButton.disabled = false;
-            voteButton.textContent = `Vote for ${teamName}`;
         }, 2200); // Remove error message after 2.2 seconds
     });
 }
