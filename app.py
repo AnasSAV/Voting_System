@@ -1,8 +1,10 @@
-from flask import Flask, jsonify, request, render_template, url_for
+from flask import Flask, jsonify, request, render_template, url_for, session
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime, timedelta
 import os
 
 app = Flask(__name__)
+app.secret_key = os.environ.get('SECRET_KEY', 'your_secret_key')  # Needed to use sessions
 
 # Configuring the PostgreSQL database
 db_url = os.environ.get('DATABASE_URL')
@@ -48,13 +50,25 @@ def submit_vote():
     if not team_name:
         return jsonify({"message": "No team name provided"}), 400
 
+    # Check if the user has voted in the last 2.2 seconds
+    last_vote_time = session.get('last_vote_time')
+    current_time = datetime.now()
+
+    if last_vote_time:
+        time_diff = current_time - last_vote_time
+        if time_diff < timedelta(seconds=2.2):
+            return jsonify({"message": "You can only vote once every 2.2 seconds"}), 429
+
+    # Record the vote
     new_vote = Vote(team_name=team_name)
     db.session.add(new_vote)
     db.session.commit()
 
+    # Update the last vote time in the session
+    session['last_vote_time'] = current_time
+
     # Redirect back to the same voting page
     return jsonify({"message": f"Vote recorded for {team_name}", "redirect_url": url_for('vote_page', vote_page=page_number)}), 200
-
 
 # Route to get voting results
 @app.route('/results', methods=['GET'])
@@ -64,7 +78,6 @@ def get_results():
     total_votes = sum(vote_results.values())
 
     return render_template('results.html', votes=vote_results, total_votes=total_votes)
-
 
 # Ensure the database tables are created
 with app.app_context():
