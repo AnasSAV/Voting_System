@@ -67,3 +67,16 @@ p.no-votes {
     width: 500px;
     height: auto;
 }
+/* Footer Section */
+.footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    margin-bottom:0;
+}
+
+.footer img {
+    width: 400px;
+    height: auto;
+}
