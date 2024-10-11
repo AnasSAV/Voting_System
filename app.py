@@ -35,7 +35,9 @@ def get_results():
     vote_results = {team: count for team, count in votes}
     return jsonify(vote_results), 200
 
+# Ensure the database tables are created
+with app.app_context():
+    db.create_all()
+
 if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()  # Ensure the database tables are created
     app.run(debug=True)
