@@ -26,12 +26,6 @@ def index():
 def vote_page(vote_page):
     if vote_page == 1:
         return render_template('vote1.html')
-    elif vote_page == 2:
-        return render_template('vote2.html')
-    elif vote_page == 3:
-        return render_template('vote3.html')
-    elif vote_page == 4:
-        return render_template('vote4.html')
     else:
         return "Page not found", 404
 
