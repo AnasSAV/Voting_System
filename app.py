@@ -1,10 +1,13 @@
 from flask import Flask, jsonify, request, render_template, url_for
 from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS
 from dotenv import load_dotenv
 import os
 
 load_dotenv()
 app = Flask(__name__)
+CORS(app)  # Enable CORS for all routes
+
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -14,6 +17,7 @@ db = SQLAlchemy(app)
 class Vote(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     team_name = db.Column(db.String(50), nullable=False)
+
 print("Database URL:", os.getenv('DATABASE_URL'))
 
 # Route to handle the root URL
@@ -32,30 +36,44 @@ def vote_page(vote_page):
 # Route to handle voting
 @app.route('/submit_vote', methods=['POST'])
 def submit_vote():
-    data = request.get_json()
-    team_name = data.get('team')
-    page_number = data.get('page')  # Get the page number
+    try:
+        data = request.get_json()
+        team_name = data.get('team')
 
-    if not team_name:
-        return jsonify({"message": "No team name provided"}), 400
+        if not team_name:
+            return jsonify({"error": "No team name provided"}), 400
 
-    new_vote = Vote(team_name=team_name)
-    db.session.add(new_vote)
-    db.session.commit()
+        new_vote = Vote(team_name=team_name)
+        db.session.add(new_vote)
+        db.session.commit()
 
-    # Redirect back to the same voting page
-    return jsonify({"message": f"Vote recorded for {team_name}", "redirect_url": url_for('vote_page', vote_page=page_number)}), 200
-
+        return jsonify({
+            "message": f"Vote recorded for {team_name}",
+            "success": True
+        }), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
 
 # Route to get voting results
 @app.route('/results', methods=['GET'])
 def get_results():
-    votes = db.session.query(Vote.team_name, db.func.count(Vote.team_name).label('count')).group_by(Vote.team_name).order_by(db.func.count(Vote.team_name).desc()).all()
-    vote_results = {team: count for team, count in votes}
-    total_votes = sum(vote_results.values())
+    try:
+        # Query to get vote counts for each team
+        votes = db.session.query(
+            Vote.team_name,
+            db.func.count(Vote.team_name).label('count')
+        ).group_by(Vote.team_name).all()
 
-    return render_template('results.html', votes=vote_results, total_votes=total_votes)
-
+        # Convert to dictionary format
+        vote_results = {team: count for team, count in votes}
+        
+        return jsonify({
+            "votes": vote_results,
+            "total_votes": sum(vote_results.values())
+        }), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 # Ensure the database tables are created
 with app.app_context():
