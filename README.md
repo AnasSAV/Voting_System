@@ -41,7 +41,7 @@ A web-based voting system built with **React**, **TypeScript**, and **Flask**. T
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/voting-system.git
+   git clone https://github.com/AnasSAV/Voting_System.git
    cd voting-system
    ```
 
@@ -128,34 +128,20 @@ voting-system/
 ## 🖼️ Screenshots
 
 ### Voting Page
-![Voting Page](https://via.placeholder.com/800x400?text=Voting+Page)
+![Voting Page](./frontend/public/images/voting_page_ss.png)
 
-### Admin Portal
-![Admin Portal](https://via.placeholder.com/800x400?text=Admin+Portal)
+### Results Page
+![Results Page](./frontend/public/images/results_page_ss.png)
 
 ---
 
 ## ☁️ Deployment
 
 ### Backend
-Use **Heroku** or **AWS** to deploy the Flask backend. Ensure the database is properly configured.
+Use **Heroku** to deploy the Flask backend. Ensure the database is properly configured.
 
 ### Frontend
-Use **Vercel** or **Netlify** to deploy the React frontend. Update the API base URL in `api.ts` to point to the deployed backend.
-
----
-
-## 📜 License
-
-This project is licensed under the MIT License. See the LICENSE file for details.
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome! Please open an issue or submit a pull request for improvements or bug fixes.
-
----
+Use **Vercel** to deploy the React frontend. Update the API base URL in `api.ts` to point to the deployed backend.
 
 ## 🔐 Admin Credentials
 
