@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import '../styles/ResultsPage.css';
 import { api, VoteResult } from '../services/api';
 import AdminLogin from './AdminLogin';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 const ResultsPage: React.FC = () => {
   const [results, setResults] = useState<VoteResult[]>([]);
@@ -31,14 +33,6 @@ const ResultsPage: React.FC = () => {
     }
   }, [isAdmin]);
 
-  const handleLogout = async () => {
-    try {
-      await api.adminLogout();
-      setIsAdmin(false);
-    } catch (err) {
-      console.error('Error logging out:', err);
-    }
-  };
 
   const fetchResults = async () => {
     try {
@@ -78,6 +72,20 @@ const ResultsPage: React.FC = () => {
 
   const totalVotes = results.reduce((sum, result) => sum + result.count, 0);
 
+  const generatePDF = async () => {
+    const element = document.getElementById('leaderboard-container');
+    if (!element) return;
+
+    const canvas = await html2canvas(element);
+    const imgData = canvas.toDataURL('image/png');
+    const pdf = new jsPDF('p', 'mm', 'a4');
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+    pdf.save('voting-leaderboard.pdf');
+  };
+
   if (isCheckingAuth) {
     return <div className="results-container">Loading...</div>;
   }
@@ -96,7 +104,7 @@ const ResultsPage: React.FC = () => {
         <img src="/images/start.png" alt="TECHNO 2024" />
       </div>
 
-      <div className="leaderboard-container">
+      <div id="leaderboard-container" className="leaderboard-container">
         <h1>Voting Leaderboard</h1>
 
         {isLoading ? (
@@ -130,6 +138,10 @@ const ResultsPage: React.FC = () => {
         )}
       </div>
 
+      <button onClick={generatePDF} className="generate-pdf-button">
+        Download Report
+      </button>
+
       <div className="footer">
         <img src="/images/IESL.png" alt="IESL Logo" />
       </div>
@@ -137,4 +149,4 @@ const ResultsPage: React.FC = () => {
   );
 };
 
-export default ResultsPage; 
+export default ResultsPage;
