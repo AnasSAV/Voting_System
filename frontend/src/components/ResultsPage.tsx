@@ -31,6 +31,15 @@ const ResultsPage: React.FC = () => {
     }
   }, [isAdmin]);
 
+  const handleLogout = async () => {
+    try {
+      await api.adminLogout();
+      setIsAdmin(false);
+    } catch (err) {
+      console.error('Error logging out:', err);
+    }
+  };
+
   const fetchResults = async () => {
     try {
       setIsLoading(true);

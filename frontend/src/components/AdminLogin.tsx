@@ -9,6 +9,7 @@ interface AdminLoginProps {
 const AdminLogin: React.FC<AdminLoginProps> = ({ onLogin }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -21,16 +22,20 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onLogin }) => {
       await api.adminLogin(username, password);
       onLogin();
     } catch (err) {
-      setError('Invalid credentials. Please try again.');
+      setError('⚠️ Invalid credentials. Please try again.');
     } finally {
       setIsLoading(false);
     }
   };
 
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
   return (
     <div className="admin-login-container">
       <div className="admin-login-box">
-        <h2>Admin Login</h2>
+        <h2>🔐 Admin Portal</h2>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="username">Username</label>
@@ -39,21 +44,32 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onLogin }) => {
               id="username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
+              autoComplete="username"
               required
             />
           </div>
           <div className="form-group">
-            <label htmlFor="password">Password</label>
+            <div className="password-label-container">
+              <label htmlFor="password">Password</label>
+              <button 
+                type="button" 
+                className="show-password-button" 
+                onClick={togglePasswordVisibility}
+              >
+                {showPassword ? 'Hide' : 'Show'}
+              </button>
+            </div>
             <input
-              type="password"
+              type={showPassword ? 'text' : 'password'}
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              autoComplete="current-password"
               required
             />
           </div>
           {error && <p className="error-message">{error}</p>}
-          <button type="submit" disabled={isLoading}>
+          <button type="submit" disabled={isLoading} className="login-submit-button">
             {isLoading ? 'Logging in...' : 'Login'}
           </button>
         </form>
@@ -62,4 +78,4 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onLogin }) => {
   );
 };
 
-export default AdminLogin; 
+export default AdminLogin;

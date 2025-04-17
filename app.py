@@ -113,7 +113,7 @@ def init_admin():
         admin = Admin.query.filter_by(username='admin').first()
         if not admin:
             admin = Admin(username='admin')
-            admin.set_password('admin123')  # Change this password in production
+            admin.set_password('admin123')  
             db.session.add(admin)
             db.session.commit()
             print("Admin user created")

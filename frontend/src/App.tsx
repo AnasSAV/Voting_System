@@ -1,9 +1,18 @@
 import { BrowserRouter as Router, Routes, Route, Link, NavLink } from 'react-router-dom';
 import VotingPage from './components/VotingPage';
 import ResultsPage from './components/ResultsPage';
+import { api } from './services/api';
 import './App.css';
 
 function App() {
+  const handleLogout = async () => {
+    try {
+      await api.adminLogout();
+    } catch (err) {
+      console.error('Error logging out:', err);
+    }
+  };
+
   return (
     <Router>
       <div className="app">
@@ -16,6 +25,7 @@ function App() {
           <div className="nav-links">
             <NavLink to="/" className={({ isActive }: { isActive: boolean }) => isActive ? "nav-link active" : "nav-link"}>Vote</NavLink>
             <NavLink to="/results" className={({ isActive }: { isActive: boolean }) => isActive ? "nav-link active" : "nav-link"}>Results</NavLink>
+            <button onClick={handleLogout} className="logout-button">Logout</button>
           </div>
         </nav>
 
