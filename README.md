@@ -1,37 +1,165 @@
-# Voting System
+
+# 🗳️ Voting System
 
 A web-based voting system built with **React**, **TypeScript**, and **Flask**. This application allows users to vote for their favorite teams and provides an admin portal to view voting results.
 
-## Features
+---
 
-- **User Voting**: Users can vote for their favorite teams.
-- **Admin Portal**: Admins can log in to view the voting leaderboard and download it as a PDF.
-- **Responsive Design**: Fully responsive UI for desktop and mobile devices.
-- **Secure Authentication**: Admin login with session-based authentication.
-- **PDF Export**: Download the voting leaderboard as a PDF report.
+## 🚀 Features
 
-## Tech Stack
+- ✅ **User Voting**: Vote for your favorite teams.
+- ✅ **Admin Portal**: Admins can log in to view results and download them as a PDF.
+- ✅ **Responsive Design**: Works on desktop and mobile devices.
+- ✅ **Secure Authentication**: Session-based admin login.
+- ✅ **PDF Export**: Export leaderboard as a PDF.
 
-### Frontend
-- **React**: For building the user interface.
-- **TypeScript**: For type-safe development.
-- **Vite**: For fast development and build tooling.
-- **CSS**: For styling the application.
+---
 
-### Backend
-- **Flask**: For handling API requests.
-- **SQLAlchemy**: For database management.
-- **PostgreSQL**: As the database.
+## 🧱 Tech Stack
 
-## Installation
+### 🔹 Frontend
+- **React**
+- **TypeScript**
+- **Vite**
+- **CSS**
 
-### Prerequisites
-- Node.js and npm installed
-- Python 3.x installed
-- PostgreSQL installed and running
+### 🔸 Backend
+- **Flask**
+- **SQLAlchemy**
+- **PostgreSQL**
 
-### Backend Setup
+---
+
+## ⚙️ Installation
+
+### 📌 Prerequisites
+- Node.js and npm
+- Python 3.x
+- PostgreSQL (running and accessible)
+
+### 🔧 Backend Setup
+
 1. Clone the repository:
    ```bash
    git clone https://github.com/your-username/voting-system.git
    cd voting-system
+   ```
+
+2. Install Python dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. Set up the database:
+   - Update the `.env` file with your PostgreSQL credentials.
+   - Initialize the database:
+     ```bash
+     python app.py
+     ```
+
+4. Run the Flask server:
+   ```bash
+   python app.py
+   ```
+
+---
+
+### 🎨 Frontend Setup
+
+1. Navigate to the frontend directory:
+   ```bash
+   cd frontend
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Start the development server:
+   ```bash
+   npm run dev
+   ```
+
+4. Open the application in your browser at [http://localhost:5173](http://localhost:5173)
+
+---
+
+## 🧪 Usage
+
+### Voting
+
+1. Navigate to the homepage.
+2. Select a team and click the "Vote" button.
+3. A popup will confirm your vote.
+
+### Admin Portal
+
+1. Navigate to `/login`
+2. Use the admin credentials:
+   - **Username:** `admin`
+   - **Password:** `admin123`
+3. View the leaderboard and download it as a PDF.
+
+---
+
+## 🗂️ Project Structure
+
+```
+voting-system/
+├── app.py              # Flask backend
+├── requirements.txt    # Backend dependencies
+├── frontend/           # React frontend
+│   ├── src/
+│   │   ├── components/ # React components
+│   │   ├── styles/     # CSS files
+│   │   ├── services/   # API service
+│   │   ├── App.tsx     # Main app component
+│   │   └── main.tsx    # Entry point
+│   ├── public/         # Static assets
+│   ├── package.json    # Frontend dependencies
+│   └── vite.config.ts  # Vite config
+├── .env                # Environment variables
+└── Procfile            # Deployment config
+```
+
+---
+
+## 🖼️ Screenshots
+
+### Voting Page
+![Voting Page](https://via.placeholder.com/800x400?text=Voting+Page)
+
+### Admin Portal
+![Admin Portal](https://via.placeholder.com/800x400?text=Admin+Portal)
+
+---
+
+## ☁️ Deployment
+
+### Backend
+Use **Heroku** or **AWS** to deploy the Flask backend. Ensure the database is properly configured.
+
+### Frontend
+Use **Vercel** or **Netlify** to deploy the React frontend. Update the API base URL in `api.ts` to point to the deployed backend.
+
+---
+
+## 📜 License
+
+This project is licensed under the MIT License. See the LICENSE file for details.
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please open an issue or submit a pull request for improvements or bug fixes.
+
+---
+
+## 🔐 Admin Credentials
+
+- **Username:** `admin`
+- **Password:** `admin123`
+
+---
