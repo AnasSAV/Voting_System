@@ -1,22 +1,34 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import '../styles/ResultsPage.css';
-
-interface VoteResult {
-  teamName: string;
-  votes: number;
-}
+import { api, VoteResult } from '../services/api';
 
 const ResultsPage: React.FC = () => {
-  // Mock data for now - will be replaced with actual data when backend is connected
-  const mockResults: VoteResult[] = [
-    { teamName: 'MushRu', votes: 0 },
-    { teamName: 'Rycycle', votes: 0 },
-    { teamName: 'PetClicks', votes: 0 },
-    { teamName: 'Brainiacs', votes: 0 },
-    { teamName: 'TropiSip', votes: 0 },
-  ].sort((a, b) => b.votes - a.votes);
+  const [results, setResults] = useState<VoteResult[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const totalVotes = mockResults.reduce((sum, result) => sum + result.votes, 0);
+  useEffect(() => {
+    const fetchResults = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+        const data = await api.getResults();
+        // Transform the data into the expected format
+        const formattedResults = Object.entries(data.votes).map(([teamName, count]) => ({
+          team_name: teamName,
+          count: count as number
+        })).sort((a, b) => b.count - a.count);
+        setResults(formattedResults);
+      } catch (err) {
+        setError('Failed to load results. Please try again later.');
+        console.error('Error fetching results:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchResults();
+  }, []);
 
   const getRowClassName = (index: number) => {
     switch (index) {
@@ -31,6 +43,8 @@ const ResultsPage: React.FC = () => {
     }
   };
 
+  const totalVotes = results.reduce((sum, result) => sum + result.count, 0);
+
   return (
     <div className="results-container">
       <div className="header">
@@ -44,7 +58,11 @@ const ResultsPage: React.FC = () => {
       <div className="leaderboard-container">
         <h1>Voting Leaderboard</h1>
 
-        {totalVotes > 0 ? (
+        {isLoading ? (
+          <p>Loading results...</p>
+        ) : error ? (
+          <p style={{ color: 'red' }}>{error}</p>
+        ) : totalVotes > 0 ? (
           <>
             <p>Total Votes: {totalVotes}</p>
             <table>
@@ -56,11 +74,11 @@ const ResultsPage: React.FC = () => {
                 </tr>
               </thead>
               <tbody>
-                {mockResults.map((result, index) => (
-                  <tr key={result.teamName} className={getRowClassName(index)}>
+                {results.map((result, index) => (
+                  <tr key={result.team_name} className={getRowClassName(index)}>
                     <td>{index + 1}</td>
-                    <td>{result.teamName}</td>
-                    <td>{result.votes}</td>
+                    <td>{result.team_name}</td>
+                    <td>{result.count}</td>
                   </tr>
                 ))}
               </tbody>

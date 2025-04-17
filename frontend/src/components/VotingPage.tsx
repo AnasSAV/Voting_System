@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import '../styles/VotingPage.css';
+import { api } from '../services/api';
 
 interface Team {
   id: number;
@@ -16,9 +17,21 @@ const teams: Team[] = [
 ];
 
 const VotingPage: React.FC = () => {
-  const handleVote = (teamName: string) => {
-    // TODO: Implement voting logic when backend is connected
-    console.log(`Voted for ${teamName}`);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleVote = async (teamName: string) => {
+    try {
+      setIsSubmitting(true);
+      setError(null);
+      await api.submitVote(teamName);
+      alert(`Successfully voted for ${teamName}!`);
+    } catch (err) {
+      setError('Failed to submit vote. Please try again.');
+      console.error('Voting error:', err);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -26,6 +39,7 @@ const VotingPage: React.FC = () => {
       <div className="header">
         <h1>TECHNO 2024</h1>
         <h2>Vote for the most popular team</h2>
+        {error && <p style={{ color: 'red' }}>{error}</p>}
       </div>
 
       <div className="vote-container">
@@ -35,8 +49,9 @@ const VotingPage: React.FC = () => {
             <button 
               className="vote-button" 
               onClick={() => handleVote(team.name)}
+              disabled={isSubmitting}
             >
-              {team.name}
+              {isSubmitting ? 'Voting...' : team.name}
             </button>
           </div>
         ))}
