@@ -1,34 +1,58 @@
 import React, { useEffect, useState } from 'react';
 import '../styles/ResultsPage.css';
 import { api, VoteResult } from '../services/api';
+import AdminLogin from './AdminLogin';
 
 const ResultsPage: React.FC = () => {
   const [results, setResults] = useState<VoteResult[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
 
   useEffect(() => {
-    const fetchResults = async () => {
+    const checkAdminStatus = async () => {
       try {
-        setIsLoading(true);
-        setError(null);
-        const data = await api.getResults();
-        // Transform the data into the expected format
-        const formattedResults = Object.entries(data.votes).map(([teamName, count]) => ({
-          team_name: teamName,
-          count: count as number
-        })).sort((a, b) => b.count - a.count);
-        setResults(formattedResults);
+        const { isAdmin } = await api.checkAdminStatus();
+        setIsAdmin(isAdmin);
       } catch (err) {
-        setError('Failed to load results. Please try again later.');
-        console.error('Error fetching results:', err);
+        console.error('Error checking admin status:', err);
       } finally {
-        setIsLoading(false);
+        setIsCheckingAuth(false);
       }
     };
 
-    fetchResults();
+    checkAdminStatus();
   }, []);
+
+  useEffect(() => {
+    if (isAdmin) {
+      fetchResults();
+    }
+  }, [isAdmin]);
+
+  const fetchResults = async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      const data = await api.getResults();
+      const formattedResults = Object.entries(data.votes).map(([teamName, count]) => ({
+        team_name: teamName,
+        count: count as number
+      })).sort((a, b) => b.count - a.count);
+      setResults(formattedResults);
+    } catch (err) {
+      setError('Failed to load results. Please try again later.');
+      console.error('Error fetching results:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleAdminLogin = () => {
+    setIsAdmin(true);
+    fetchResults();
+  };
 
   const getRowClassName = (index: number) => {
     switch (index) {
@@ -44,6 +68,14 @@ const ResultsPage: React.FC = () => {
   };
 
   const totalVotes = results.reduce((sum, result) => sum + result.count, 0);
+
+  if (isCheckingAuth) {
+    return <div className="results-container">Loading...</div>;
+  }
+
+  if (!isAdmin) {
+    return <AdminLogin onLogin={handleAdminLogin} />;
+  }
 
   return (
     <div className="results-container">
