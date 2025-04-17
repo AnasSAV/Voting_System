@@ -19,13 +19,15 @@ const teams: Team[] = [
 const VotingPage: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [popupMessage, setPopupMessage] = useState<string | null>(null);
 
   const handleVote = async (teamName: string) => {
     try {
       setIsSubmitting(true);
       setError(null);
       await api.submitVote(teamName);
-      alert(`Successfully voted for ${teamName}!`);
+      setPopupMessage(`Thank you for voting ${teamName}!`);
+      setTimeout(() => setPopupMessage(null), 3000); // Hide popup after 3 seconds
     } catch (err) {
       setError('Failed to submit vote. Please try again.');
       console.error('Voting error:', err);
@@ -57,6 +59,12 @@ const VotingPage: React.FC = () => {
         ))}
       </div>
 
+      {popupMessage && (
+        <div className="popup">
+          <p>{popupMessage}</p>
+        </div>
+      )}
+
       <div className="footer">
         <img src="/images/IESL.png" alt="IESL Logo" />
       </div>
@@ -64,4 +72,4 @@ const VotingPage: React.FC = () => {
   );
 };
 
-export default VotingPage; 
+export default VotingPage;

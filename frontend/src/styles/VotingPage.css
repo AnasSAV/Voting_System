@@ -98,4 +98,35 @@
 .footer img {
   max-width: 500px;
   height: auto;
-} 
+}
+
+.popup {
+  position: fixed;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #1565c0;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-align: center;
+  z-index: 1000;
+  animation: fadeInOut 3s ease-in-out;
+}
+
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -60%);
+  }
+  10%, 90% {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -40%);
+  }
+}
