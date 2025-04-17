@@ -128,10 +128,10 @@ voting-system/
 ## 🖼️ Screenshots
 
 ### Voting Page
-![Voting Page](./frontend/public/images/voting_page_ss.png)
+![Voting Page](frontend/public/images/voting_page_ss.png)
 
 ### Results Page
-![Results Page](./frontend/public/images/results_page_ss.png)
+![Results Page](frontend/public/images/results_page_ss.png)
 
 ---
 
