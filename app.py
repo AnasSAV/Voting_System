@@ -4,6 +4,7 @@ from flask_cors import CORS
 from dotenv import load_dotenv
 import os
 from functools import wraps
+from werkzeug.security import generate_password_hash, check_password_hash
 
 load_dotenv()
 app = Flask(__name__)
@@ -15,14 +16,22 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
-# Admin credentials (in production, use environment variables)
-ADMIN_USERNAME = os.getenv('ADMIN_USERNAME', 'admin')
-ADMIN_PASSWORD = os.getenv('ADMIN_PASSWORD', 'admin123')
-
 # Define the Vote model
 class Vote(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     team_name = db.Column(db.String(50), nullable=False)
+
+# Define the Admin model
+class Admin(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(50), unique=True, nullable=False)
+    password_hash = db.Column(db.String(200), nullable=False)
+
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
 
 def admin_required(f):
     @wraps(f)
@@ -39,7 +48,8 @@ def admin_login():
     username = data.get('username')
     password = data.get('password')
 
-    if username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
+    admin = Admin.query.filter_by(username=username).first()
+    if admin and admin.check_password(password):
         session['admin_logged_in'] = True
         return jsonify({"message": "Login successful", "success": True}), 200
     return jsonify({"error": "Invalid credentials"}), 401
@@ -96,10 +106,19 @@ def get_results():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-# Ensure the database tables are created
-with app.app_context():
-    db.create_all()
+# Initialize admin user if not exists
+def init_admin():
+    with app.app_context():
+        db.create_all()
+        admin = Admin.query.filter_by(username='admin').first()
+        if not admin:
+            admin = Admin(username='admin')
+            admin.set_password('admin123')  # Change this password in production
+            db.session.add(admin)
+            db.session.commit()
+            print("Admin user created")
 
 if __name__ == '__main__':
+    init_admin()
     app.run(debug=True, port=5050)
 
