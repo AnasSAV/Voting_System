@@ -1,6 +1,20 @@
 import React from 'react';
 import '../styles/VotingPage.css';
 
+interface Team {
+  id: number;
+  name: string;
+  image: string;
+}
+
+const teams: Team[] = [
+  { id: 1, name: 'MushRu', image: '/images/mushru.jpg' },
+  { id: 2, name: 'Rycycle', image: '/images/rycycle.jpg' },
+  { id: 3, name: 'PetClicks', image: '/images/onezero.jpg' },
+  { id: 4, name: 'Brainiacs', image: '/images/brainiacs.jpg' },
+  { id: 5, name: 'TropiSip', image: '/images/tropisip.jpg' },
+];
+
 const VotingPage: React.FC = () => {
   const handleVote = (teamName: string) => {
     // TODO: Implement voting logic when backend is connected
@@ -15,30 +29,17 @@ const VotingPage: React.FC = () => {
       </div>
 
       <div className="vote-container">
-        <div className="team">
-          <img src="/images/mushru.jpg" alt="Team SSJC" />
-          <button className="vote-button" onClick={() => handleVote('MushRu')}>MushRu</button>
-        </div>
-
-        <div className="team">
-          <img src="/images/rycycle.jpg" alt="Rycycle" />
-          <button className="vote-button" onClick={() => handleVote('Rycycle')}>Rycycle</button>
-        </div>
-
-        <div className="team">
-          <img src="/images/onezero.jpg" alt="Institute of Brainiacs" />
-          <button className="vote-button" onClick={() => handleVote('PetClicks')}>PetClicks</button>
-        </div>
-
-        <div className="team">
-          <img src="/images/brainiacs.jpg" alt="OneZero" />
-          <button className="vote-button" onClick={() => handleVote('Brainiacs')}>Brainiacs</button>
-        </div>
-
-        <div className="team">
-          <img src="/images/tropisip.jpg" alt="TropiSip" />
-          <button className="vote-button" onClick={() => handleVote('TropiSip')}>TropiSip</button>
-        </div>
+        {teams.map((team) => (
+          <div key={team.id} className="team" data-number={String(team.id).padStart(2, '0')}>
+            <img src={team.image} alt={`Team ${team.name}`} />
+            <button 
+              className="vote-button" 
+              onClick={() => handleVote(team.name)}
+            >
+              {team.name}
+            </button>
+          </div>
+        ))}
       </div>
 
       <div className="footer">

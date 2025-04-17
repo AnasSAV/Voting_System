@@ -14,9 +14,22 @@ const ResultsPage: React.FC = () => {
     { teamName: 'PetClicks', votes: 0 },
     { teamName: 'Brainiacs', votes: 0 },
     { teamName: 'TropiSip', votes: 0 },
-  ];
+  ].sort((a, b) => b.votes - a.votes);
 
   const totalVotes = mockResults.reduce((sum, result) => sum + result.votes, 0);
+
+  const getRowClassName = (index: number) => {
+    switch (index) {
+      case 0:
+        return 'gold';
+      case 1:
+        return 'silver';
+      case 2:
+        return 'bronze';
+      default:
+        return 'light-blue';
+    }
+  };
 
   return (
     <div className="results-container">
@@ -25,7 +38,7 @@ const ResultsPage: React.FC = () => {
       </div>
 
       <div className="start">
-        <img src="/images/start.png" alt="start" />
+        <img src="/images/start.png" alt="TECHNO 2024" />
       </div>
 
       <div className="leaderboard-container">
@@ -44,18 +57,7 @@ const ResultsPage: React.FC = () => {
               </thead>
               <tbody>
                 {mockResults.map((result, index) => (
-                  <tr
-                    key={result.teamName}
-                    className={
-                      index === 0
-                        ? 'gold'
-                        : index === 1
-                        ? 'silver'
-                        : index === 2
-                        ? 'bronze'
-                        : 'light-blue'
-                    }
-                  >
+                  <tr key={result.teamName} className={getRowClassName(index)}>
                     <td>{index + 1}</td>
                     <td>{result.teamName}</td>
                     <td>{result.votes}</td>
