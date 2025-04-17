@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import { api } from '../services/api';
 import '../styles/AdminLogin.css';
 
@@ -12,6 +13,7 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onLogin }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate(); // Initialize useNavigate
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,6 +23,7 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onLogin }) => {
     try {
       await api.adminLogin(username, password);
       onLogin();
+      navigate('/results'); // Redirect to the results page
     } catch (err) {
       setError('⚠️ Invalid credentials. Please try again.');
     } finally {
