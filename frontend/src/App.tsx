@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Link, NavLink } from 'react-rou
 import VotingPage from './components/VotingPage';
 import ResultsPage from './components/ResultsPage';
 import AdminLogin from './components/AdminLogin';
+import RegisterPage from './components/RegisterPage';
 import { api } from './services/api';
 import './App.css';
 import { useState, useEffect } from 'react';
@@ -61,6 +62,7 @@ function App() {
           <Route path="/" element={<VotingPage />} />
           <Route path="/results" element={<ResultsPage />} />
           <Route path="/login" element={<AdminLogin onLogin={handleLogin} />} />
+          <Route path="/register" element={<RegisterPage />} />
         </Routes>
       </div>
     </Router>

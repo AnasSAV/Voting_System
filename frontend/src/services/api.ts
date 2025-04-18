@@ -71,5 +71,33 @@ export const api = {
       console.error('Error fetching results:', error);
       throw error;
     }
-  }
-}; 
+  },
+
+  // User registration
+  userRegister: async (username: string, password: string) => {
+    try {
+      const response = await axios.post(`${API_BASE_URL}/user/register`, {
+        username,
+        password,
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error registering user:', error);
+      throw error;
+    }
+  },
+
+  // User login
+  userLogin: async (username: string, password: string) => {
+    try {
+      const response = await axios.post(`${API_BASE_URL}/user/login`, {
+        username,
+        password,
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error logging in user:', error);
+      throw error;
+    }
+  },
+};

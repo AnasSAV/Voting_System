@@ -33,6 +33,18 @@ class Admin(db.Model):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
+# Define the User model
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(50), unique=True, nullable=False)
+    password_hash = db.Column(db.String(200), nullable=False)
+
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
+
 def admin_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
@@ -64,6 +76,46 @@ def admin_logout():
 @app.route('/admin/status', methods=['GET'])
 def check_admin_status():
     return jsonify({"isAdmin": session.get('admin_logged_in', False)}), 200
+
+# User registration route
+@app.route('/user/register', methods=['POST'])
+def user_register():
+    data = request.get_json()
+    username = data.get('username')
+    password = data.get('password')
+
+    if not username or not password:
+        return jsonify({"error": "Username and password are required"}), 400
+
+    if User.query.filter_by(username=username).first():
+        return jsonify({"error": "Username already exists"}), 400
+
+    new_user = User(username=username)
+    new_user.set_password(password)
+    db.session.add(new_user)
+    db.session.commit()
+
+    return jsonify({"message": "User registered successfully"}), 201
+
+# User login route
+@app.route('/user/login', methods=['POST'])
+def user_login():
+    data = request.get_json()
+    username = data.get('username')
+    password = data.get('password')
+
+    user = User.query.filter_by(username=username).first()
+    if user and user.check_password(password):
+        session['user_logged_in'] = True
+        return jsonify({"message": "Login successful", "success": True}), 200
+
+    return jsonify({"error": "Invalid credentials"}), 401
+
+# User logout route
+@app.route('/user/logout', methods=['POST'])
+def user_logout():
+    session.pop('user_logged_in', None)
+    return jsonify({"message": "Logged out successfully"}), 200
 
 # Route to handle voting
 @app.route('/submit_vote', methods=['POST'])
